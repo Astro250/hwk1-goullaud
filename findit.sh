@@ -12,3 +12,27 @@
 
 dir=$1
 
+if [ -d "$dir" ]
+then
+    :
+else
+    echo "Nope. Next time try giving a directory name that exists."
+    exit
+fi
+
+for file in $dir/*.fits
+do
+    cat="${file%%.fits}.cat"
+    #if cat file exists, move on, otherwise copy filename to list
+    if [ -e "$cat" ]
+    then
+	:
+    else
+	filename="${file##*/}"
+	echo $filename >> no_catalogues.list
+    fi
+done
+
+#check to make sure the numbers are right
+ls $dir | grep "fits" | wc -l
+ls $dir | grep "cat" | wc -l
