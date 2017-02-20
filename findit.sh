@@ -20,6 +20,11 @@ else
     exit
 fi
 
+if [ -e  no_catalogues.list ]
+then
+    rm no_catalogues.list
+fi
+
 for file in $dir/*.fits
 do
     cat="${file%%.fits}.cat"
@@ -34,5 +39,12 @@ do
 done
 
 #check to make sure the numbers are right
-ls $dir | grep "fits" | wc -l
-ls $dir | grep "cat" | wc -l
+fitnum=$(ls $dir | grep "fits" | wc -l)
+catnum=$(ls $dir | grep "cat" | wc -l)
+
+resnum1=$(($fitnum - $catnum))
+resnum2=$(cat no_catalogues.list | wc -l)
+if [ $resnum1 != $resnum2 ]
+then
+    echo "Numbers do not check out, check code."
+fi
